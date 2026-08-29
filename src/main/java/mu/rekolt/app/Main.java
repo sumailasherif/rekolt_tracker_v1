@@ -1,50 +1,22 @@
 package mu.rekolt.app;
 
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 public class Main {
-    public static void main(String[] args) {
-        // 1. Declare inputs
-//        double mass = 236.0;
-//        double basePrice = 90.0;
-//
-//        // 2. Perform the step calculations
-//        double baseValue = mass * basePrice;
-//
-//        double gradeMultiplier = 1.15; // Grade A
-//        double gradeValue = baseValue * gradeMultiplier;
-//
-//        double categoryMultiplier = 1.00; // Cereal (Beans)
-//        double categoryValue = gradeValue * categoryMultiplier;
-//
-//        double commission = categoryValue * 0.05;
-//        double transportLevy = mass * 2.0;
-//
-//        double netPayable = categoryValue - commission - transportLevy;
-//
-//        // 3. Display the results
-//        System.out.println("Net Payable: " + netPayable);
-=======
-        // 1. We declare inputs
-        double mass = 236.0;
-        double basePrice = 90.0;
-        // This helps us to calculate the Base Value. we use double to cater for decimals
-        double baseValue = mass * basePrice;
-
-        // We declare Grade Multiplier (Grade A = 1.15)
-        double gradeMultiplier = 1.15;
-        double gradeValue = baseValue * gradeMultiplier;
-
-        //We apply Category Multiplier (Cereal = 1.00)
-        double categoryMultiplier = 1.00;
-        double categoryValue = gradeValue * categoryMultiplier;
-
-        //we calculate the commission (5% or 0.05)
-        double commission = categoryValue * 0.05;
-
-        //transport levy is MUR 2 per kg
-        double transportLevy = mass * 2.0;
-
-        //Net Payable is calculated difference between category value and commission and transport
-        double netPayable = categoryValue - commission - transportLevy;
-        System.out.println("Net Payable: " + netPayable);
-    }
-}
+        public static void main(String[] args) {
+                int choice = 0;
+                int price;
+        do {
+                        System.out.println();
+                        System.out.println("=== Welcome to REKOLT Planters Cooperative | Produce Tracking System 2026 ===\"");
+                        System.out.println("_________________________________________________________________________\n");
+                        System.out.println("Main Menu");
+                        System.out.println("_________ \n");
+                        System.out.println("""
+                    1. Log New Delivery
+                    2. View Seasonal Values
+                    3. Export Season Summary Report
+                    4. Import Sample Dataset
+                    5. Exit
+                    """);
