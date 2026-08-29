@@ -2,13 +2,6 @@ package mu.rekolt.app;
 
 public class Main {
     public static void main(String[] args) {
-<<<<<<< HEAD
-
-
-
-
-
-
         // 1. Declare inputs
 //        double mass = 236.0;
 //        double basePrice = 90.0;
@@ -53,6 +46,5 @@ public class Main {
         //Net Payable is calculated difference between category value and commission and transport
         double netPayable = categoryValue - commission - transportLevy;
         System.out.println("Net Payable: " + netPayable);
->>>>>>> 5cdbbc36409235d21f3c8184b7d330ebcbf2bcd2
     }
 }
