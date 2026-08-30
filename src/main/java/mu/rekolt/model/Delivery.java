@@ -99,3 +99,24 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
         this.grade = QualityGrade.fromScore(qualityScore);
     }
 
+    @Override
+    public int compareTo(Delivery other) {
+        // This is done in descending order, that is, highest net payable value comes first.
+        return Double.compare(other.netPayable, this.netPayable);
+    }
+    // Main recordDelivery function - to be used in main
+    public static String recordDelivery(Scanner scanner) {
+        String deliveryId = "D-%d".formatted(IDGenerator.getNextId());
+        String produceCode;
+        double produceWeightKg;
+        int qualityScore;
+        int deliveryWeek;
+        String memberId;
+        String memberName;
+        boolean valid = true;
+
+        System.out.println("Log a New Delivery");
+        System.out.println("---------------------\n");
+        do {
+            System.out.print("Enter Member ID: ");
+            memberId = scanner.nextLine();
