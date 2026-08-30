@@ -104,7 +104,7 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
         // This is done in descending order, that is, highest net payable value comes first.
         return Double.compare(other.netPayable, this.netPayable);
     }
-    // Main recordDelivery function - to be used in main
+    // This is our Main recordDelivery function which we will use in main
     public static String recordDelivery(Scanner scanner) {
         String deliveryId = "D-%d".formatted(IDGenerator.getNextId());
         String produceCode;
@@ -119,9 +119,10 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
         System.out.println("---------------------\n");
         do {
             System.out.print("Enter Member ID: ");
+
             memberId = scanner.nextLine();
 
-            if (!memberId.matches("M-\\d{4}")) { /* Validation of Member code format */
+            if (!memberId.matches("M-\\d{4}")) { //This allows use to validate Member code format
                 valid = false;
                 System.out.println("That member ID doesn't look right - please try again!");
             } else {
@@ -132,8 +133,9 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
 
         do {
             System.out.print("Enter Member Name: ");
+
             memberName = scanner.nextLine();
-            if (memberName.isEmpty()) { /* Checking if member has inputted a name */
+            if (memberName.isEmpty()) { // This helps to check  if member has inputted a name
                 valid = false;
                 System.out.println("Member name can't be blank - please enter one!");
             } else {
@@ -143,8 +145,9 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
         } while (!valid);
         do {
             System.out.print("Enter Produce Code: ");
+
             produceCode = scanner.nextLine();
-            if (produceCode.contentEquals("MZE") || produceCode.contentEquals("BNS") || /* Validating inputted produce code */
+            if (produceCode.contentEquals("MZE") || produceCode.contentEquals("BNS") || // This allows use to validate Member code format
                     produceCode.contentEquals("POT") || produceCode.contentEquals("TEA")) {
                 valid = true;
                 break;
@@ -157,4 +160,42 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
                 BNS - Beans
                 POT - Potato
                 TEA - Green Tea Leaf""");
+            }
+            do {
+                System.out.print("Produce Mass (KG): ");
+
+
+                produceWeightKg = scanner.nextDouble();
+                if (produceWeightKg <= 0 || produceWeightKg > 5000) { // This allows use to validate Member code format min & max mass
+                    System.out.println("That mass is out of range - we can only take deliveries up to 5000KG!");
+                    valid = false;
+                } else {
+                    valid = true;
+                    break;
+                }
+            } while (!valid);
+
+            do {
+                System.out.print("Enter Quality Score: ");
+
+                qualityScore = scanner.nextInt();
+                if (qualityScore < 0 || qualityScore > 100) { /* This allows use to validate min & max quality score
+                    System.out.println("Quality score has to be between 0 and 100 - try again.");
+                    valid = false;
+                } else {
+                    valid = true;
+                    break;
+                }
+            } while (!valid);
+
+            do {
+                System.out.print("Enter Delivery Week: ");
+                deliveryWeek = scanner.nextInt();
+                if (deliveryWeek < 1 || deliveryWeek > 20) { // This allows use to validate available weeks
+                    System.out.println("That week's out of range - please enter a valid one!");
+                    valid = false;
+                } else {
+                    valid = true;
+                    break;
+                }
             }
