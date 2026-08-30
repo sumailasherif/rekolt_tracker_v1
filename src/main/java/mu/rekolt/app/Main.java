@@ -24,6 +24,6 @@ public class Main {
                     1. Log New Delivery
                     2. View Seasonal Values
                     3. Export Season Summary Report
-                    4. Populate Sample Dataset
+                    4. Populate Sample Data
                     5. Exit
                     """);

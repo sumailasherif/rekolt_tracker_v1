@@ -161,49 +161,50 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
                 POT - Potato
                 TEA - Green Tea Leaf""");
             }
-            do {
-                System.out.print("Produce Mass (KG): ");
+        } while (!valid);
 
+        do {
+            System.out.print("Produce Mass (KG): ");
 
-                produceWeightKg = scanner.nextDouble();
-                if (produceWeightKg <= 0 || produceWeightKg > 5000) { // This allows use to validate Member code format min & max mass
-                    System.out.println("That mass is out of range - we can only take deliveries up to 5000KG!");
-                    valid = false;
-                } else {
-                    valid = true;
-                    break;
-                }
-            } while (!valid);
-
-            do {
-                System.out.print("Enter Quality Score: ");
-
-                qualityScore = scanner.nextInt();
-                if (qualityScore < 0 || qualityScore > 100) { //This allows use to validate min & max quality score
-                    System.out.println("Quality score has to be between 0 and 100 - try again.");
-                    valid = false;
-                } else {
-                    valid = true;
-                    break;
-                }
-            } while (!valid);
-
-            do {
-                System.out.print("Enter Delivery Week: ");
-                deliveryWeek = scanner.nextInt();
-                if (deliveryWeek < 1 || deliveryWeek > 20) { // This allows use to validate available weeks
-                    System.out.println("That week's out of range - please enter a valid one!");
-                    valid = false;
-                } else {
-                    valid = true;
-                    break;
-                }
-            } while (!valid);
-    scanner.nextLine(); // consume trailing newline left by the last nextInt()
-
-    Delivery delivery = new Delivery(deliveryId, produceCode, memberId, memberName, produceWeightKg,
-            qualityScore, deliveryWeek); //This helps create a delivery object
-                    deliveries.add(delivery); // We use this to add  the delivery object to the deliveries arraylist<>
-                    return deliveryId;
-                }
+            produceWeightKg = scanner.nextDouble();
+            if (produceWeightKg <= 0 || produceWeightKg > 5000) { // This allows use to validate Member code format min & max mass
+                System.out.println("That mass is out of range - we can only take deliveries up to 5000KG!");
+                valid = false;
+            } else {
+                valid = true;
+                break;
             }
+        } while (!valid);
+
+        do {
+            System.out.print("Enter Quality Score: ");
+
+            qualityScore = scanner.nextInt();
+            if (qualityScore < 0 || qualityScore > 100) { //This allows use to validate min & max quality score
+                System.out.println("Quality score has to be between 0 and 100 - try again.");
+                valid = false;
+            } else {
+                valid = true;
+                break;
+            }
+        } while (!valid);
+
+        do {
+            System.out.print("Enter Delivery Week: ");
+            deliveryWeek = scanner.nextInt();
+            if (deliveryWeek < 1 || deliveryWeek > 20) { // This allows use to validate available weeks
+                System.out.println("That week's out of range - please enter a valid one!");
+                valid = false;
+            } else {
+                valid = true;
+                break;
+            }
+        } while (!valid);
+        scanner.nextLine(); // consume trailing newline left by the last nextInt()
+
+        Delivery delivery = new Delivery(deliveryId, produceCode, memberId, memberName, produceWeightKg,
+                qualityScore, deliveryWeek); //This helps create a delivery object
+        deliveries.add(delivery); // We use this to add  the delivery object to the deliveries arraylist<>
+        return deliveryId;
+    }
+}
