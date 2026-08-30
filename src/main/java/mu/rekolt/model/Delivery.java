@@ -179,7 +179,7 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
                 System.out.print("Enter Quality Score: ");
 
                 qualityScore = scanner.nextInt();
-                if (qualityScore < 0 || qualityScore > 100) { /* This allows use to validate min & max quality score
+                if (qualityScore < 0 || qualityScore > 100) { //This allows use to validate min & max quality score
                     System.out.println("Quality score has to be between 0 and 100 - try again.");
                     valid = false;
                 } else {
@@ -197,5 +197,13 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
                 } else {
                     valid = true;
                     break;
+                }
+            } while (!valid);
+    scanner.nextLine(); // consume trailing newline left by the last nextInt()
+
+    Delivery delivery = new Delivery(deliveryId, produceCode, memberId, memberName, produceWeightKg,
+            qualityScore, deliveryWeek); //This helps create a delivery object
+                    deliveries.add(delivery); // We use this to add  the delivery object to the deliveries arraylist<>
+                    return deliveryId;
                 }
             }
