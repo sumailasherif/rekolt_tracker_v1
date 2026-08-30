@@ -16,7 +16,7 @@ public class GrainCrop extends Produce {
         return pricePerKg;
     }
 
-    //I hardcoded this return value to 1.00 as required by the payment rules for Cereal/Grain produce
+    //I added this return value to 1.00 as required by the payment rules for Cereal/Grain produce
     @Override
     public double categoryMultiplier() {
         return 1.00;
