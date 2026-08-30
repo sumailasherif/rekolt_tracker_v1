@@ -6,7 +6,7 @@ import java.util.Locale;
 
 public class Main {
         public static void main(String[] args) {
-                //We added initial variable declarations to store user menu selection and pricing state
+                //I added initial variable declarations to store user menu selection and pricing state
                 int choice = 0;
                 int price;
         do { // do-while loop to keep displaying the application menu until the user chooses to exit
@@ -19,7 +19,7 @@ public class Main {
 
 
 
-                        // We added a text block output to display the available main menu options
+                        // I added a text block output to display the available main menu options
                         System.out.println("""
                     1. Log New Delivery
                     2. View Seasonal Values
