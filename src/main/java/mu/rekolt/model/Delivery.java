@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Delivery implements Comparable<Delivery> {// we make every field private and final because a delivery's details never changes
     private  final String deliveryId;
-    private  final String p1roduceCode;
+    private  final String produceCode;
     private  final double produceWeightKg;
     private  final String memberName;
     private  final int qualityScore;
@@ -24,7 +24,7 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
     private  double netPayable;
 
 
-        // --- Getters & Setters ---
+        //This is where I define my Getters & Setters
         public String getDeliveryId() {
             return deliveryId;
         }
@@ -85,4 +85,17 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
         public void setTransportLevyAmount(double transportLevyAmount) {
             this.transportLevyAmount = transportLevyAmount;
         }
+
+    // This is the constructor for Delivery class
+    public Delivery(String deliveryId, String produceCode, String memberId, String memberName,
+                    double produceWeightKg, int qualityScore, int deliveryWeek) {
+        this.deliveryId = deliveryId;
+        this.memberId = memberId;
+        this.memberName = memberName;
+        this.produceCode = produceCode;
+        this.produceWeightKg = produceWeightKg;
+        this.qualityScore = qualityScore;
+        this.deliveryWeek = deliveryWeek;
+        this.grade = QualityGrade.fromScore(qualityScore);
+    }
 
