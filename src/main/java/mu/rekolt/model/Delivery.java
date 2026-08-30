@@ -120,3 +120,41 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
         do {
             System.out.print("Enter Member ID: ");
             memberId = scanner.nextLine();
+
+            if (!memberId.matches("M-\\d{4}")) { /* Validation of Member code format */
+                valid = false;
+                System.out.println("That member ID doesn't look right - please try again!");
+            } else {
+                valid = true;
+                break;
+            }
+        } while (!valid);
+
+        do {
+            System.out.print("Enter Member Name: ");
+            memberName = scanner.nextLine();
+            if (memberName.isEmpty()) { /* Checking if member has inputted a name */
+                valid = false;
+                System.out.println("Member name can't be blank - please enter one!");
+            } else {
+                valid = true;
+                break;
+            }
+        } while (!valid);
+        do {
+            System.out.print("Enter Produce Code: ");
+            produceCode = scanner.nextLine();
+            if (produceCode.contentEquals("MZE") || produceCode.contentEquals("BNS") || /* Validating inputted produce code */
+                    produceCode.contentEquals("POT") || produceCode.contentEquals("TEA")) {
+                valid = true;
+                break;
+            } else {
+                valid = false;
+                System.out.println("That's not a recognized produce code!");
+                System.out.println("""
+                Accepted Produce Codes:
+                MZE - Maize
+                BNS - Beans
+                POT - Potato
+                TEA - Green Tea Leaf""");
+            }
