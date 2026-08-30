@@ -9,3 +9,15 @@ public class CashCropProduce extends Produce {
         super(code, massKg, qualityScore);
         this.price = price;
     }
+
+    //This is where I plug my own price into Produce's getUnitPrice(), instead of Produce needing to know how each crop is priced
+    @Override
+    protected double unitPrice() {
+        return price;
+    }
+
+    //I hardcoded this instead of taking it as a constructor argument, since every cash crop gets the same bonus
+    @Override
+    public double categoryMultiplier() {
+        return 1.10;
+    }
