@@ -9,3 +9,13 @@ public class PayoutCalculator {
     // I defined constant declarations for financial rates
     private static final double COMMISSION_RATE = 0.05;
     private static final double TRANSPORT_LEVY_PER_KG = 2.0;
+    // I added an immutable payout result record to hold financial calculations
+    public record PayoutResult(
+            double baseValue,
+            double gradedValue,
+            double categoryValue,
+            double commissionValue,
+            double transportLevyValue,
+            double netPayableValue,
+            Grade grade
+    ) {}
