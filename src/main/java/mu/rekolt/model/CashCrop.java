@@ -21,3 +21,10 @@ public class CashCropProduce extends Produce {
     public double categoryMultiplier() {
         return 1.10;
     }
+
+    //This is where I name the category for reports and receipts
+    @Override
+    public String getCategoryName() {
+        return "Cash Crop";
+    }
+}
