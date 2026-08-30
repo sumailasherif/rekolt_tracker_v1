@@ -10,3 +10,21 @@ public class GrainCrop extends Produce {
         super(produceCode, produceWeightKg, qualityScore);
         this.pricePerKg = pricePerKg;
     }
+    //This is where I supply the grain unit price implementation to Produce's template method
+    @Override
+    protected double unitPrice() {
+        return pricePerKg;
+    }
+
+    //I hardcoded this return value to 1.00 as required by the payment rules for Cereal/Grain produce
+    @Override
+    public double categoryMultiplier() {
+        return 1.00;
+    }
+
+    //This is where I provide the category label for display and report formatting
+    @Override
+    public String getCategoryName() {
+        return "Grain Crop";
+    }
+}
