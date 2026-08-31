@@ -1,7 +1,5 @@
 package mu.rekolt.service;
 
-import mu.rekolt.model.Delivery;
-
 public class DemoDataSeeder {
 
     //I defined this initial dataset containing a mix of local and Ghanaian member delivery records with unique seed figures
@@ -39,12 +37,11 @@ public class DemoDataSeeder {
     };
 
     //I implemented this seeder function to instantiate delivery objects and populate season records into memory
-    public static void populateInitialData() {
+    public static void populateInitialData(SeasonService seasonService) {
         int recordCount = 0;
 
         for (Object[] row : RAW_DELIVERY_DATA) {
             recordCount++;
-            String deliveryId = "D-%d".formatted(1000 + recordCount);
 
             //I extracted each row attribute into local variables before passing them into Delivery
             String memberId = (String) row[0];
@@ -54,13 +51,8 @@ public class DemoDataSeeder {
             int qualityScore = (int) row[4];
             int week = (int) row[5];
 
-            //I instantiated the delivery record and appended it to the shared deliveries collection
-            Delivery delivery = new Delivery(deliveryId, produceCode, memberId, memberName, mass, qualityScore, week);
-            Delivery.recordDelivery().add(delivery);
-
-            //I triggered automatic payment calculations and updated the season's weekly volume grid
-            Payments.paymentCalculator(deliveryId);
-            SeasonReporting.updateWeeklyGrid(week, produceCode, mass);
+            //I let SeasonService create the delivery, run payout calculations, and update the season's weekly volume grid
+            seasonService.addDelivery(memberId, memberName, produceCode, mass, qualityScore, week);
         }
 
         //I displayed a summary output confirming the total number of pre-loaded delivery records

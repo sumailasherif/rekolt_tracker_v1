@@ -1,8 +1,7 @@
 package mu.rekolt.model;
 
-import mu.rekolt.util.IDGenerator;
+import mu.rekolt.service.SeasonService;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -14,8 +13,6 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
     private  final int qualityScore;
     private final String memberId;
     private final int deliveryWeek;
-
-    private static final ArrayList<Delivery> deliveries = new ArrayList<>();
 
     //I computed and stored these once,  in the constructor, instead of recalculating them every time we read them
     private  String grade;
@@ -105,8 +102,7 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
         return Double.compare(other.netPayable, this.netPayable);
     }
     // This is our Main recordDelivery function which we will use in main
-    public static String recordDelivery(Scanner scanner) {
-        String deliveryId = "D-%d".formatted(IDGenerator.getNextId());
+    public static String recordDelivery(Scanner scanner, SeasonService seasonService) {
         String produceCode;
         double produceWeightKg;
         int qualityScore;
@@ -202,9 +198,6 @@ public class Delivery implements Comparable<Delivery> {// we make every field pr
         } while (!valid);
         scanner.nextLine(); // consume trailing newline left by the last nextInt()
 
-        Delivery delivery = new Delivery(deliveryId, produceCode, memberId, memberName, produceWeightKg,
-                qualityScore, deliveryWeek); //This helps create a delivery object
-        deliveries.add(delivery); // We use this to add  the delivery object to the deliveries arraylist<>
-        return deliveryId;
+        return seasonService.addDelivery(memberId, memberName, produceCode, produceWeightKg, qualityScore, deliveryWeek);
     }
 }

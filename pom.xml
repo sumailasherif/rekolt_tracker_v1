@@ -38,8 +38,12 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Add libraries here as you need them, e.g. Apache POI for
-             the season-report .docx generation objective -->
+        <!-- Apache POI for the season-report .docx generation objective -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.5</version>
+        </dependency>
     </dependencies>
 
     <build>

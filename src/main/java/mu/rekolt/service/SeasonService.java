@@ -1,64 +1,65 @@
 package mu.rekolt.service;
 
-import mu.rekolt.model.*;
+import mu.rekolt.model.Delivery;
+import mu.rekolt.model.MemberFarmer;
+import mu.rekolt.util.IDGenerator;
 
-import java.lang.reflect.Member;
 import java.util.*;
-import Delivery.;
 
 public class SeasonService {
 
     private final double[][] weeklyGrid = new double[21][4];
-    private final List<Deliveries> deliveries = new ArrayList<>();
+    private final List<Delivery> deliveries = new ArrayList<>();
+    private final PayoutCalculator payoutCalculator = new PayoutCalculator();
 
     // I switched memberTotals to TreeMap to maintain natural alphabetical order by member ID
     private final Map<String, Double> memberTotals = new TreeMap<>();
 
     // I switched deliveriesByMember to LinkedHashMap to preserve exact chronological delivery sequence
-    private final Map<String, List<Deliveries>> deliveriesByMember = new LinkedHashMap<>();
+    private final Map<String, List<Delivery>> deliveriesByMember = new LinkedHashMap<>();
 
     private final Set<String> memberIds = new HashSet<>();
-    private final Map<String, Member> members = new HashMap<>();
+    private final Map<String, MemberFarmer> members = new HashMap<>();
 
-    public void addDelivery(String memberId, String memberName, String produceCode, double massKg, int score, int week) {
-        Grade grade = Grade.fromScore(score);
-        String deliveryId = "D-" + (1000 + deliveries.size() + 1);
-        Deliveries delivery = new Deliveries(
-                deliveryId, memberId, memberName, produceCode, massKg, score, week);
-        double netPayable = delivery.netPayable();
+    public String addDelivery(String memberId, String memberName, String produceCode, double massKg, int score, int week) {
+        String deliveryId = "D-%d".formatted(IDGenerator.getNextId());
+        Delivery delivery = new Delivery(deliveryId, produceCode, memberId, memberName, massKg, score, week);
+
+        PayoutCalculator.PayoutResult payout = payoutCalculator.calculate(delivery);
+        delivery.setCommissionAmount(payout.commissionValue());
+        delivery.setTransportLevyAmount(payout.transportLevyValue());
+        delivery.setNetPayable(payout.netPayableValue());
 
         deliveries.add(delivery);
         weeklyGrid[week][produceColumnIndex(produceCode)] += massKg;
-        memberTotals.put(memberId, memberTotals.getOrDefault(memberId, 0.0) + netPayable);
+        memberTotals.put(memberId, memberTotals.getOrDefault(memberId, 0.0) + payout.netPayableValue());
 
         deliveriesByMember.computeIfAbsent(memberId, k -> new ArrayList<>()).add(delivery);
 
         memberIds.add(memberId);
-        members.putIfAbsent(memberId, new Member(memberId, memberName));
+        members.putIfAbsent(memberId, new MemberFarmer(memberId, memberName));
 
-        printDeliveryBreakdown(delivery);
+        printDeliveryBreakdown(delivery, massKg, payout);
+
+        return deliveryId;
     }
 
-    private void printDeliveryBreakdown(Deliveries delivery) {
+    private void printDeliveryBreakdown(Delivery delivery, double massKg, PayoutCalculator.PayoutResult payout) {
         String massText;
-        if (delivery.getMassKg() == (long) delivery.getMassKg()) {
-            massText = String.format("%.0f", delivery.getMassKg());
+        if (massKg == (long) massKg) {
+            massText = String.format("%.0f", massKg);
         } else {
-            massText = String.valueOf(delivery.getMassKg());
+            massText = String.valueOf(massKg);
         }
 
-        System.out.printf("Delivery %s recorded. Grade %s%n", delivery.getId(), delivery.getGrade());
-        printCalculationLine("Base value", massText + " x " + String.format("%.2f", delivery.getUnitPrice()),
-                "=", delivery.getBaseValue());
-        printCalculationLine("Grade " + delivery.getGrade(), "x " + String.format("%.2f", delivery.getGradeMultiplier()),
-                "=", delivery.getGradedValue());
-        printCalculationLine(delivery.getProduceCategory(),
-                "x " + String.format("%.2f", delivery.getCategoryMultiplier()),
-                "=", delivery.getCategoryValue());
-        printCalculationLine("Commission 5%", "", "-", delivery.getCommission());
-        printCalculationLine("Transport levy", massText + " x 2.00", "-", delivery.getTransportLevy());
+        System.out.printf("Delivery %s recorded. Grade %s%n", delivery.getDeliveryId(), delivery.getGrade());
+        printCalculationLine("Base value", massText, "=", payout.baseValue());
+        printCalculationLine("Grade " + delivery.getGrade(), "", "=", payout.gradedValue());
+        printCalculationLine("Category", "", "=", payout.categoryValue());
+        printCalculationLine("Commission 5%", "", "-", payout.commissionValue());
+        printCalculationLine("Transport levy", massText + " x 2.00", "-", payout.transportLevyValue());
         System.out.printf("    %-20s %-18s = %,12.2f MUR%n",
-                "NET PAYABLE", "", delivery.getNetPayable());
+                "NET PAYABLE", "", payout.netPayableValue());
     }
 
     private void printCalculationLine(String label, String calculation, String symbol, double amount) {
@@ -79,7 +80,7 @@ public class SeasonService {
     public void printMemberTotals() {
         System.out.println("Total payment per member (MUR)");
         for (Map.Entry<String, Double> entry : memberTotals.entrySet()) {
-            System.out.printf("%s   %s   %.2f%n", entry.getKey(), members.get(entry.getKey()).getName(), entry.getValue());
+            System.out.printf("%s   %s   %.2f%n", entry.getKey(), members.get(entry.getKey()).getMemberName(), entry.getValue());
         }
     }
 
@@ -100,40 +101,40 @@ public class SeasonService {
     }
 
     // I refactored topDeliveriesByValue to use Stream sorting and limiting
-    public List<Deliveries> topDeliveriesByValue(int n) {
+    public List<Delivery> topDeliveriesByValue(int n) {
         return deliveries.stream()
-                .sorted(Comparator.comparingDouble(Deliveries::getNetPayable).reversed())
+                .sorted(Comparator.comparingDouble(Delivery::getNetPayable).reversed())
                 .limit(n)
                 .toList();
     }
 
     // I simplified findMemberById to directly lookup the key without redundant condition checks
-    public Member findMemberById(Map<String, Member> membersMap, String id) {
+    public MemberFarmer findMemberById(Map<String, MemberFarmer> membersMap, String id) {
         return membersMap.get(id);
     }
 
-    public Member findMemberById(String id) {
+    public MemberFarmer findMemberById(String id) {
         return findMemberById(members, id);
     }
 
     // I replaced the Iterator loop with Stream filtering for cleaner list generation
-    public static List<Deliveries> excludingRejected(List<Deliveries> deliveries) {
+    public static List<Delivery> excludingRejected(List<Delivery> deliveries) {
         return deliveries.stream()
                 .filter(d -> !"REJECT".equalsIgnoreCase(d.getGrade()))
                 .toList();
     }
 
-    public List<Member> getSortedMembers() {
-        List<Member> list = new ArrayList<>(members.values());
-        Collections.sort(list);
+    public List<MemberFarmer> getSortedMembers() {
+        List<MemberFarmer> list = new ArrayList<>(members.values());
+        list.sort(Comparator.comparing(MemberFarmer::getMemberId));
         return list;
     }
 
-    public List<Deliveries> getDeliveries() {
+    public List<Delivery> getDeliveries() {
         return deliveries;
     }
 
-    public List<Deliveries> getDeliveriesForMember(String memberId) {
+    public List<Delivery> getDeliveriesForMember(String memberId) {
         return deliveriesByMember.getOrDefault(memberId, Collections.emptyList());
     }
 
